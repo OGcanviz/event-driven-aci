@@ -2,7 +2,7 @@
 
 from config.config import News_api_key, queueConf, DATABASE_URI, ACI_CONFIG, azure_context
 from azure.servicebus import ServiceBusService, Message, Queue
-from azure.monitor import MonitorClient
+from azure.mgmt.monitor import MonitorManagementClient
 from flask import Flask, render_template, request, Response
 import json
 import sys
@@ -16,7 +16,7 @@ import requests
 
 
 #The monitor client to get container group metrics
-monitor_client = MonitorClient(azure_context.credentials, azure_context.subscription_id)
+monitor_client = MonitorManagementClient(azure_context.credentials, azure_context.subscription_id)
 
 #set up the service bus queue
 bus_service = ServiceBusService(
@@ -57,6 +57,13 @@ def sendwork():
 @app.route('/clear', methods=['PUT'])
 def clear():
     print("clearing database")
+    dict = {}
+    container_names = db.containerstate.find({})
+    for item in container_names:
+        key = item['name']
+        if(not(dict.has_key(key))):
+            bus_service.send_queue_message(queueConf['delete_queue_name'], Message(key))
+            dict[key] = True
     db.containerstate.delete_many({})
     return SUCCESS
 
@@ -125,7 +132,7 @@ def available_metrics(container_name):
     resource_id = (
         "subscriptions/{}/"
         "resourceGroups/{}/"
-        "/providers/microsoft.containerinstance/containerGroups/{}"
+        "providers/microsoft.containerinstance/containerGroups/{}"
     ).format(ACI_CONFIG['subscriptionId'], ACI_CONFIG['resourceGroup'], container_name)
 
     metrics = monitor_client.metric_definitions.list(resource_id)
@@ -147,7 +154,7 @@ def _get_metrics(subscription_id, resource_group_name, container_name):
     resource_id = (
         "subscriptions/{}/"
         "resourceGroups/{}/"
-        "/providers/microsoft.containerinstance/containerGroups/{}"
+        "providers/microsoft.containerinstance/containerGroups/{}"
     ).format(subscription_id, resource_group_name, container_name)
 
     #filter = " and ".join(["name.value"])CpuUsage,MemoryUsage
@@ -156,14 +163,14 @@ def _get_metrics(subscription_id, resource_group_name, container_name):
     series_labels = []
     data_points = []
     
-    metrics_data = monitor_client.metrics.list(resource_id, metric='MemoryUsage')
-    for item in metrics_data:
+    metrics_data = monitor_client.metrics.list(resource_id,metricnames="CpuUsage,MemoryUsage")
+    for item in metrics_data.value:
         data = list()
         series_label = list()
 
-        labels.append(item.name.value)
+        labels.append(item.name.localized_value)
 
-        for data_point in item.data:
+        for data_point in item.timeseries[0].data:
             data.append(NoneZero(data_point.average))
             series_label.append(data_point.time_stamp.strftime('%H:%M:%S'))
 
