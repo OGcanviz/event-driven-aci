@@ -41,7 +41,6 @@ Well Jimmy, let me tell you
 
 2. Create resource group.
    ```console
-    #create resource group
     az group create -l westus -n <resource group name>
    ```
 
@@ -51,7 +50,6 @@ Well Jimmy, let me tell you
     ```
     Output sample:
     ```
-    #return value as following
     #{
     #  "appId": "fb7c4111-2144-4489-8fd9-XXXXXXXXX",
     #  "displayName": "msazure-aciaks-demo",
@@ -67,7 +65,6 @@ Well Jimmy, let me tell you
    ```console
     cd arm
     
-    #deploy resource group
     az group deployment create --template-file azuredeploy.json --parameters @azuredeploy.parameters.json
     ```
     >Note: The output **fqdn** is the URL of the ACI dashboard.
