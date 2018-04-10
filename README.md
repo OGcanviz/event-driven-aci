@@ -1,6 +1,6 @@
 # Even Driven ACI
 
-### Components
+## Components
 
 1. web-server: This is the host for the dashboard and the api. The dashboard will let you add work to the queue. When work is added a yellow pending container will show up. This is a default place holder until the actual ACI instance comes up and adds it's InProgress state to the DB to be read. Once the container has reached InProgress, the UI will chagne the default pending to Blue with the container's name in place. You can also hit the "More Details" Button to open the model with that containers ID. Currently the modal is calling to the metrics api endpoint for that specific container. 
 
@@ -8,13 +8,13 @@
 
 3. Spawner: This will watch the service bus queue and spawner ACI instances. The plan is to retire this and create an Azure Function instead. 
 
-### Sales Pitch
+## Sales Pitch
 
-#### Do YOU have things to be computed?!?
+### Do YOU have things to be computed?!?
 
-#### Do YOU wish they were computed?!?
+### Do YOU wish they were computed?!?
 
-#### Are YOU tired of having to deal with VMs to get those things computed?!?
+### Are YOU tired of having to deal with VMs to get those things computed?!?
 
 Well, here at Serverless-Buzzwordland we have just the solution. Just add your string based data to a queue and our 
 helpful little watcher will automagicly spin up container based compute for each of your tasks.
@@ -30,7 +30,7 @@ Well Jimmy, let me tell you
 3. And best of all **YOU PAY PER SECOND**, thats like 60 times less than a minute!
 
 
-#### Deployment Steps
+## Deployment Steps
 
 1. Clone the repo.
    ```console
