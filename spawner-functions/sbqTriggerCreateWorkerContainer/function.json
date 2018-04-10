@@ -4,7 +4,7 @@
       "name": "mySbMsg",
       "type": "serviceBusTrigger",
       "direction": "in",
-      "queueName": "msazurebatchdev",
+      "queueName": "createqueue",
       "connection": "servicebus_connectionString",
       "accessRights": "Listen"
     }
