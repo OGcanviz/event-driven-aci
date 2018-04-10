@@ -1,10 +1,7 @@
 az container create \
-    -g aciherodemo \
+    -g msazure-aciaks-temp \
     -n web-server \
-    --image pskreter/web-server:prod \
+    --image hubertsui/web-server \
+    --dns-name-label msazurebatchdev\
     --ip-address public \
-    --ports 80 \
-    --azure-file-volume-account-name $STORAGE_NAME \
-    --azure-file-volume-account-key $STORAGE_KEY \
-    --azure-file-volume-share-name $SHARE_NAME \
-    --azure-file-volume-mount-path /app/config/
+    --ports 80

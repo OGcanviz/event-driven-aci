@@ -12,13 +12,7 @@
     <title>ACI Dashboard</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- MetisMenu CSS -->
-    <link href="/static/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="/static/css/sb-admin-2.css" rel="stylesheet">
+    <link href="/static/vendor/materialize/materialize.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,93 +20,138 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    <style>
+        .card.aci-instance.active .card-title{
+            font-weight:normal;
+            color: black !important;
+        }
+        .card.aci-instance{
+            cursor:pointer;
+        }
+    </style>
 </head>
 
 <body>
-
-    <div id="wrapper">
-
-        <div id="page-wrapper">
-            
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Dashboard - ACI Events</h1>
-                    <button id="sumbit-refresh" class="btn btn-primary mb-2">Refresh</button>
-                </div>
+    <nav class="black">
+        <div class="nav-wrapper">
+            <div class="container">
+            <a href="#" class="brand-logo">Dashboard - ACI Events</a>
             </div>
-
-            <!-- Form to add work to the queue -->
-            <div class="form-inline" style="margin:2rem">
-                <div class="form-group mx-sm-3 mb-2">
-                    <label for="input-work" class="sr-only">Add Work</label>
-                    <input class="form-control" id="input-work">
-                </div>
-                <button id="sumbit-work" class="btn btn-primary mb-2">Add To Queue</button>
-            </div>
-
-            <!-- Container State Section -->
-            <!-- This is populated with a pending/default container group card when 
-                work is added or with the actual container group card -->
-            <div id="container-wrapper" class="row"></div>
-
-
         </div>
-        <!-- /#page-wrapper -->
-
-    </div>
-    <!-- /#wrapper -->
-
-    <!-- Model whos data is replaced depeanding on which container group card is pressed -->
-    <div class="modal fade" id="details-model" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" id="modal-box" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="details-name"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-    
-                    <div class="panel panel-default">
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-
-                            <!-- Chart container -->
-                            <canvas id="container-details-chart" width="400" height="400"></canvas>
-                            
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <div class="card z-depth-0 white">
+                    <div class="card-content">
+                        <span class="card-title">Input</span>
+                        <div class="input-field">
+                            <label for="input-work">Add Work</label>
+                            <input id="input-work" type="text">
                         </div>
-                        <!-- /.panel-body -->
+                        <a id="sumbit-work" href="#" class="waves-effect waves-light btn blue">Add To Queue</a>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="card z-depth-0 white">
+                    <div class="card-content">
+                        <span class="card-title">
+                            Workers
+                            <a id="sumbit-refresh" href="#" class="waves-effect waves-light btn green">Refresh</a>
+                        </span>
+                        <div id="container-wrapper" class="row">
+                            <!--<div class="col s12 m6 l4">
+                                <div class="card blue">
+                                    <div class="card-content">
+                                        <span class="card-title white-text">Name of the container</span>
+                                    </div>        
+                                    <div class="card-action blue lighten-1">
+                                        <a href="#" class="white-text">Output</a>
+                                        <a href="#" class="white-text">Analysis</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s12 m6 l4">
+                                <div class="card green">
+                                    <div class="card-content">
+                                        <span class="card-title white-text">Name of the container</span>
+                                    </div>        
+                                    <div class="card-action green lighten-1">
+                                        <a href="#" class="white-text">Results</a>
+                                        <a href="#" class="white-text">Analysis</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s12 m6 l4">
+                                <div class="card orange">
+                                    <div class="card-content">
+                                        <span class="card-title white-text">Name of the container</span>
+                                    </div>        
+                                    <div class="card-action orange lighten-1">
+                                        <a href="#" class="white-text">Results</a>
+                                        <a href="#" class="white-text">Analysis</a>
+                                    </div>
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="card z-depth-0 white">
+                    <div class="card-content">
+                        <span class="card-title">
+                            Details
+                        </span>
+                        <div class="row" style="min-height:448px;">
+                            <div class="col s12">
+                                <ul class="tabs">
+                                    <li class="tab"><a class="active" href="#tab-content-cpu">CPU</a></li>
+                                    <li class="tab"><a href="#tab-content-memory">Memory</a></li>
+                                    <li class="tab disabled"><a href="#tab-content-output">Output</a></li>
+                                </ul>
+                            </div>
+                            <div id="tab-content-cpu" class="col s12">
+                                <canvas id="container-cpu-chart" style="width:100%;height:400px;"></canvas>
+                            </div>
+                            <div id="tab-content-memory" class="col s12">
+                                <canvas id="container-memory-chart" style="width:100%;height:400px;"></canvas>
+                            </div>
+                            <div id="tab-content-output" class="col s12">
+                                <p>The Output are currently not supported</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    
 
     <!-- jQuery -->
     <script src="/static/vendor/jquery/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="/static/vendor/metisMenu/metisMenu.min.js"></script>
+    <script src="/static/vendor/materialize/materialize.min.js"></script>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 
-
     <script>
+        function clearCanvas(id){
+            var c = document.getElementById(id);
+            var cxt = c.getContext("2d");
+            c.width = Math.round($(".tabs").width());
+            c.height = 400;
+        }
 
 
         $(function () {
-
+            $(".tabs").tabs();
             //Save the current state of container group objects in the DOM
             var current_state = new Map()
 
@@ -122,14 +161,20 @@
                 $.get("/currentstate", function (data) {
                     
                     container_states = $.parseJSON(data)['container_states'];
+                    var dic = new Map();
                     for (var i = 0; i < container_states.length; i++) {
-
+                        
                         //Update current state
                         container_name = container_states[i].name
                         container_state = container_states[i].state
 
+                        if(dic[container_name])
+                            continue;
+                        dic[container_name] = true;
+
                         if (current_state.has(container_name)){
-                            $("#"+container_name + " > div").removeClass(current_state.get(container_name)).addClass(ConvertStateToPanel(container_state))
+                            var state = current_state.get(container_name);
+                            $("#"+container_name + " ." + state).removeClass(state).addClass(ConvertStateToPanel(container_state))
                         }
                         else{
                             UpdateDefaultContainer(container_name, ConvertStateToPanel(container_state))
@@ -172,13 +217,19 @@
 
             //Set up model with monitoring metrics for the individule ACI
             $("#container-wrapper").on('click', ".aci-instance", function (event) {
-                containerName = event.target.id.replace("-modal", '')
+                containerName = $(this).attr("id").replace("-modal", '')
                 
+                $(".aci-instance").removeClass("active");
+                $(this).addClass("active");
+
                 $.get("/api/metrics/" + containerName, function (data) {
+                    $('#loading').hide();
                     data = $.parseJSON(data)
                     DrawMetricChart(data.chartData, containerName)
                 })
-                $('#details-model').modal('toggle');
+                
+                clearCanvas("container-cpu-chart");
+                clearCanvas("container-memory-chart");
             });
 
         });
@@ -196,13 +247,11 @@
             
             defaultContainer.removeClass("default-container")
             
-            console.log(containerName, "- ", panelState)
-            
             //Replace the default with the known values
             defaultContainer.attr('id', containerName)
             defaultContainer.find(".aci-instance").attr('id', containerName + "-modal")
             defaultContainer.find(".name-place").text(containerName)
-            defaultContainer.children().first().removeClass("panel-yellow").addClass(panelState)
+            defaultContainer.find(".orange").removeClass("orange").addClass(panelState)
             
         }
 
@@ -210,18 +259,18 @@
         function ConvertStateToPanel(state){
             switch (state) {
                 case "InProgress":
-                    return "panel-primary";
+                    return "blue";
                 case "Done":
-                    return "panel-green";
+                    return "green";
                 default:
-                    return "panel-yellow";
+                    return "orange";
             }
         }
 
         // Draw the chart with the returned chart data
         function DrawMetricChart(chartData, containerName){
             console.log(chartData)
-            var ctx = document.getElementById("container-details-chart").getContext('2d');
+            var ctx = document.getElementById("container-cpu-chart").getContext('2d');
             var containerDetailsChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -239,9 +288,31 @@
                         ],
                         borderWidth: 1,
                         fill: false
-                    },{
-                        label: 'Memory Usage',
-                        data: [0,0,1720320,1720320,1431552,1431552,1431552,1431552,1431552,0,0,0,654336,872448,872448,872448,872448,872448,872448,872448,872448,872448,872448,872448,872448,986112,1024000,1024000,1024000,1024000,1024000,1024000,1024000,1024000,1024000,1024000,931840,901120,901120,901120,901120,901120,901120,901120,1124000,1124000,1124000,1124000,1124000,1124000,1124000,1124000,1124000,931840,901120,901120,901120,901120,901120,901120,901120],
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: containerName + " - CPU Metrics"
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            },
+                            position:'left'
+                        }]
+                    }
+                }
+            });
+            var ctx = document.getElementById("container-memory-chart").getContext('2d');
+            var containerDetailsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartData.seriesLabels[0],
+                    datasets: [{
+                        label: chartData.labels[1],
+                        data: chartData.dataPoints[1],
                         backgroundColor: 'rgba(242, 78, 78, 1)',
                         borderColor: 'rgba(242, 78, 78, 1)',
                         borderWidth: 1,
@@ -251,7 +322,7 @@
                 options: {
                     title: {
                         display: true,
-                        text: containerName + " - Metrics"
+                        text: containerName + " - Memory Metrics"
                     },
                     scales: {
                         yAxes: [{
@@ -268,56 +339,26 @@
         //    seconds to up come, the pending container is a nice placeholder to show that
         //    things are working. This will be replaced when the container state is updated.
         function GetDefaultContainerBox() {
-                return `<div class="col-lg-2 col-md-2 default-container">
-                        <div class="panel panel-yellow">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-comments fa-5x"></i>
-                                    </div>
-                                    <div>
-                                        <div class="name-place">Pending</div>
-                                    </div>
-                                </div>
+                return `<div class="col s12 m6 l4 default-container">
+                            <div class="card orange aci-instance">
+                                <div class="card-content">
+                                    <span class="card-title white-text name-place">Pending</span>
+                                </div>        
                             </div>
-                            <a href="#">
-                                <div class="panel-footer">
-                                    <span  class="pull-left aci-instance">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>`
+                        </div>`
             }
 
         // Create an actual container group card with actual values. 
         function GetContainerBox(name, panel_state){
-            return `<div id="` + name + `" class="col-lg-2 col-md-2">
-                        <div class="panel ` + panel_state + `">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-comments fa-5x"></i>
-                                    </div>
-                                    <div>
-                                        <div class="name-place">` + name + `</div>
-                                    </div>
-                                </div>
+            return `<div id="`+ name +`" class="col s12 m6 l4">
+                        <div id="` + name + `-modal" class="card ` + panel_state + ` aci-instance">
+                            <div class="card-content">
+                                <span class="card-title white-text name-place">`+ name +`</span>
                             </div>
-                            <a href="#">
-                                <div class="panel-footer">
-                                    <span id="` + name + `-modal" class="pull-left aci-instance">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
                         </div>
-                    </div>`
+                    </div>`;
         }
-
     </script>
-
 </body>
 
 </html>

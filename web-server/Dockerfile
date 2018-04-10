@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # -----------------------------------------------------------------------------------
 
-FROM python
+FROM python:2.7
 
 COPY requirements.txt /
 
