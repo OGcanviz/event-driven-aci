@@ -5,7 +5,7 @@
       "type": "serviceBusTrigger",
       "direction": "in",
       "queueName": "msazurebatchdev",
-      "connection": "msazurebatchdev_RootManageSharedAccessKey_SERVICEBUS",
+      "connection": "servicebus_connectionString",
       "accessRights": "Listen"
     }
   ],

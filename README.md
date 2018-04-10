@@ -28,3 +28,44 @@ Well Jimmy, let me tell you
 2. It will only run while your task is being computed then shut down.
 
 3. And best of all **YOU PAY PER SECOND**, thats like 60 times less than a minute!
+
+
+#### install script
+#git code
+git clone https://github.com/OGcanviz/event-driven-aci.git
+
+#change folder
+cd event-driven-aci
+
+#create resource group
+az group create -l westus -n <resource group name>
+
+#change folder
+cd arm
+
+#create spn
+az ad sp create-for-rbac -n <resource group name> --role contributor
+#return value as following
+#{
+#  "appId": "fb7c4111-2144-4489-8fd9-XXXXXXXXX",
+#  "displayName": "msazure-aciaks-demo",
+#  "name": "http://msazure-aciaks-demo",
+#  "password": "0fa91eda-261e-47ad-bb65-XXXXXXXX",
+#  "tenant": "3dad2b09-9e66-4eb8-9bef-XXXXXXX"
+#}
+#update azuredeploy.parameter.json
+
+#deploy resource group
+az group deployment create --template-file azuredeploy.json --parameters @azuredeploy.parameters.json
+
+#change folder
+cd ../spawner-functions
+
+#download npm package
+npm install
+
+#zip spawner-functions folder
+
+#upload zipped file
+az functionapp deployment source config-zip  -g <resource group name> -n <app_name> --src <zip_file>
+
