@@ -34,7 +34,7 @@ Well Jimmy, let me tell you
 
 1. Clone the repo.
    ```console
-   git clone https://github.com/OGcanviz/event-driven-aci.git
+   git clone https://github.com/samkreter/event-driven-aci.git
 
    cd event-driven-aci
    ```
@@ -65,7 +65,7 @@ Well Jimmy, let me tell you
    ```console
     cd arm
     
-    az group deployment create --template-file azuredeploy.json --parameters @azuredeploy.parameters.json
+    az group deployment create -g <resource group name> --template-file azuredeploy.json --parameters @azuredeploy.parameters.json
     ```
     >Note: The output **fqdn** is the URL of the ACI dashboard.
 
