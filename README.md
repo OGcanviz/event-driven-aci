@@ -30,23 +30,27 @@ Well Jimmy, let me tell you
 3. And best of all **YOU PAY PER SECOND**, thats like 60 times less than a minute!
 
 
-#### install script
+#### Deployment Steps
 
-    ```console
-    #git code
-    git clone https://github.com/OGcanviz/event-driven-aci.git
+1. Clone the repo.
+   ```console
+   git clone https://github.com/OGcanviz/event-driven-aci.git
 
-    #change folder
-    cd event-driven-aci
+   cd event-driven-aci
+   ```
 
+2. Create resource group.
+   ```console
     #create resource group
     az group create -l westus -n <resource group name>
+   ```
 
-    #change folder
-    cd arm
-
-    #create spn
+2. Create service principal.
+   ```console
     az ad sp create-for-rbac -n <resource group name> --role contributor
+    ```
+    Output sample:
+    ```
     #return value as following
     #{
     #  "appId": "fb7c4111-2144-4489-8fd9-XXXXXXXXX",
@@ -55,20 +59,28 @@ Well Jimmy, let me tell you
     #  "password": "0fa91eda-261e-47ad-bb65-XXXXXXXX",
     #  "tenant": "3dad2b09-9e66-4eb8-9bef-XXXXXXX"
     #}
-    #update azuredeploy.parameter.json by text editor
-
-    #deploy resource group
-    az group deployment create --template-file azuredeploy.json --parameters @azuredeploy.parameters.json
-
-    #change folder
-    cd ../spawner-functions
-
-    #download npm package
-    npm install
-
-    #zip spawner-functions folder by zip tool
-
-    #upload zipped file
-    az functionapp deployment source config-zip  -g <resource group name> -n <app_name> --src <zip_file>
     ```
 
+3. Update the **azuredeploy.parameters.json** in the folder **arm** with the service principal credential created above
+
+4. Deploy the Azure resources with the ARM template.
+   ```console
+    cd arm
+    
+    #deploy resource group
+    az group deployment create --template-file azuredeploy.json --parameters @azuredeploy.parameters.json
+    ```
+    >Note: The output **fqdn** is the URL of the ACI dashboard.
+
+4. Download NPM packages.
+   ```console
+    cd ../spawner-functions
+
+    npm install
+
+5. Compress the files inside the **spawner-functions** folder as a .zip file.
+
+6. Deploy the .zip file to the Azure function.
+   ```console
+    az functionapp deployment source config-zip  -g <resource group name> -n <app_name> --src <zip_file>
+   ```
