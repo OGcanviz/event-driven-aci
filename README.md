@@ -81,3 +81,7 @@ Well Jimmy, let me tell you
    ```console
     az functionapp deployment source config-zip  -g <resource group name> -n <app_name> --src <zip_file>
    ```
+
+### Known Issue
+
+1. When you finish deploy, check connection string in Azure Function. If it is empty, update its value manually.
