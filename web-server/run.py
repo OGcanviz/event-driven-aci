@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from config.config import News_api_key, queueConf, DATABASE_URI, ACI_CONFIG, azure_context
+from config.config import queueConf, DATABASE_URI, ACI_CONFIG, azure_context
 from azure.servicebus import ServiceBusService, Message, Queue
 from azure.mgmt.monitor import MonitorManagementClient
 from flask import Flask, render_template, request, Response

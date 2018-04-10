@@ -20,7 +20,15 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    <style>
+        .card.aci-instance.active .card-title{
+            font-weight:normal;
+            color: black !important;
+        }
+        .card.aci-instance{
+            cursor:pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -93,35 +101,36 @@
                 </div>
             </div>
         </div>
-    </div>
-
-      <!-- Modal Structure -->
-    <div id="details-model" class="modal">
-        <div class="modal-content">
-            <h4>CPU &amp; Memory Usage Analysis</h4>
-            <div id="loading" class="center-align" style="position:absolute;top:224px;left:0;width:100%;height:200px;">
-                <div class="preloader-wrapper big active">
-                    <div class="spinner-layer spinner-blue">
-                        <div class="circle-clipper left">
-                            <div class="circle"></div>
-                        </div>
-                        <div class="gap-patch">
-                            <div class="circle"></div>
-                        </div>
-                        <div class="circle-clipper right">
-                            <div class="circle"></div>
+        <div class="row">
+            <div class="col s12">
+                <div class="card z-depth-0 white">
+                    <div class="card-content">
+                        <span class="card-title">
+                            Details
+                        </span>
+                        <div class="row" style="min-height:448px;">
+                            <div class="col s12">
+                                <ul class="tabs">
+                                    <li class="tab"><a class="active" href="#tab-content-cpu">CPU</a></li>
+                                    <li class="tab"><a href="#tab-content-memory">Memory</a></li>
+                                    <li class="tab disabled"><a href="#tab-content-output">Output</a></li>
+                                </ul>
+                            </div>
+                            <div id="tab-content-cpu" class="col s12">
+                                <canvas id="container-cpu-chart" style="width:100%;height:400px;"></canvas>
+                            </div>
+                            <div id="tab-content-memory" class="col s12">
+                                <canvas id="container-memory-chart" style="width:100%;height:400px;"></canvas>
+                            </div>
+                            <div id="tab-content-output" class="col s12">
+                                <p>The Output are currently not supported</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <canvas id="container-details-chart" style="width:100%;height:400px;"></canvas>
         </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-        </div>
-    </div
-
-    
+    </div>
 
     <!-- jQuery -->
     <script src="/static/vendor/jquery/jquery.min.js"></script>
@@ -133,12 +142,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 
     <script>
-        
+        function clearCanvas(id){
+            var c = document.getElementById(id);
+            var cxt = c.getContext("2d");
+            c.width = Math.round($(".tabs").width());
+            c.height = 400;
+        }
 
 
         $(function () {
-            var elem = document.querySelector('.modal');
-            M.Modal.init(elem);
+            $(".tabs").tabs();
             //Save the current state of container group objects in the DOM
             var current_state = new Map()
 
@@ -204,15 +217,19 @@
 
             //Set up model with monitoring metrics for the individule ACI
             $("#container-wrapper").on('click', ".aci-instance", function (event) {
-                containerName = event.target.id.replace("-modal", '')
+                containerName = $(this).attr("id").replace("-modal", '')
                 
+                $(".aci-instance").removeClass("active");
+                $(this).addClass("active");
+
                 $.get("/api/metrics/" + containerName, function (data) {
                     $('#loading').hide();
                     data = $.parseJSON(data)
                     DrawMetricChart(data.chartData, containerName)
                 })
-                $('#loading').show();
-                $('#details-model').modal("open");
+                
+                clearCanvas("container-cpu-chart");
+                clearCanvas("container-memory-chart");
             });
 
         });
@@ -229,8 +246,6 @@
             var defaultContainer = $(".default-container").first()
             
             defaultContainer.removeClass("default-container")
-            
-            console.log(containerName, "- ", panelState)
             
             //Replace the default with the known values
             defaultContainer.attr('id', containerName)
@@ -255,7 +270,7 @@
         // Draw the chart with the returned chart data
         function DrawMetricChart(chartData, containerName){
             console.log(chartData)
-            var ctx = document.getElementById("container-details-chart").getContext('2d');
+            var ctx = document.getElementById("container-cpu-chart").getContext('2d');
             var containerDetailsChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -272,36 +287,48 @@
                             'rgba(255, 159, 64, 1)'
                         ],
                         borderWidth: 1,
-                        fill: false,
-                        yAxisID:'CPU'
-                    },{
-                        label: chartData.labels[1],
-                        data: chartData.dataPoints[1],
-                        backgroundColor: 'rgba(242, 78, 78, 1)',
-                        borderColor: 'rgba(242, 78, 78, 1)',
-                        borderWidth: 1,
-                        fill: false,
-                        yAxisID:'Memory'
+                        fill: false
                     }]
                 },
                 options: {
                     title: {
                         display: true,
-                        text: containerName + " - Metrics"
+                        text: containerName + " - CPU Metrics"
                     },
                     scales: {
                         yAxes: [{
-                            id:'CPU',
                             ticks: {
                                 beginAtZero:true
                             },
                             position:'left'
-                        },{
-                            id:'Memory',
+                        }]
+                    }
+                }
+            });
+            var ctx = document.getElementById("container-memory-chart").getContext('2d');
+            var containerDetailsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartData.seriesLabels[0],
+                    datasets: [{
+                        label: chartData.labels[1],
+                        data: chartData.dataPoints[1],
+                        backgroundColor: 'rgba(242, 78, 78, 1)',
+                        borderColor: 'rgba(242, 78, 78, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: containerName + " - Memory Metrics"
+                    },
+                    scales: {
+                        yAxes: [{
                             ticks: {
                                 beginAtZero:true
-                            },
-                            position:'right'
+                            }
                         }]
                     }
                 }
@@ -313,13 +340,10 @@
         //    things are working. This will be replaced when the container state is updated.
         function GetDefaultContainerBox() {
                 return `<div class="col s12 m6 l4 default-container">
-                            <div class="card orange">
+                            <div class="card orange aci-instance">
                                 <div class="card-content">
                                     <span class="card-title white-text name-place">Pending</span>
                                 </div>        
-                                <div class="card-action orange lighten-1">
-                                    <a href="#" class="white-text aci-instance">Analysis</a>
-                                </div>
                             </div>
                         </div>`
             }
@@ -327,12 +351,9 @@
         // Create an actual container group card with actual values. 
         function GetContainerBox(name, panel_state){
             return `<div id="`+ name +`" class="col s12 m6 l4">
-                        <div class="card ` + panel_state + `">
+                        <div id="` + name + `-modal" class="card ` + panel_state + ` aci-instance">
                             <div class="card-content">
                                 <span class="card-title white-text name-place">`+ name +`</span>
-                            </div>        
-                            <div class="card-action ` + panel_state + ` lighten-1">
-                                <a id="` + name + `-modal" href="#" class="white-text aci-instance">Analysis</a>
                             </div>
                         </div>
                     </div>`;
