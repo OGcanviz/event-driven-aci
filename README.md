@@ -31,41 +31,44 @@ Well Jimmy, let me tell you
 
 
 #### install script
-#git code
-git clone https://github.com/OGcanviz/event-driven-aci.git
 
-#change folder
-cd event-driven-aci
+    ```console
+    #git code
+    git clone https://github.com/OGcanviz/event-driven-aci.git
 
-#create resource group
-az group create -l westus -n <resource group name>
+    #change folder
+    cd event-driven-aci
 
-#change folder
-cd arm
+    #create resource group
+    az group create -l westus -n <resource group name>
 
-#create spn
-az ad sp create-for-rbac -n <resource group name> --role contributor
-#return value as following
-#{
-#  "appId": "fb7c4111-2144-4489-8fd9-XXXXXXXXX",
-#  "displayName": "msazure-aciaks-demo",
-#  "name": "http://msazure-aciaks-demo",
-#  "password": "0fa91eda-261e-47ad-bb65-XXXXXXXX",
-#  "tenant": "3dad2b09-9e66-4eb8-9bef-XXXXXXX"
-#}
-#update azuredeploy.parameter.json
+    #change folder
+    cd arm
 
-#deploy resource group
-az group deployment create --template-file azuredeploy.json --parameters @azuredeploy.parameters.json
+    #create spn
+    az ad sp create-for-rbac -n <resource group name> --role contributor
+    #return value as following
+    #{
+    #  "appId": "fb7c4111-2144-4489-8fd9-XXXXXXXXX",
+    #  "displayName": "msazure-aciaks-demo",
+    #  "name": "http://msazure-aciaks-demo",
+    #  "password": "0fa91eda-261e-47ad-bb65-XXXXXXXX",
+    #  "tenant": "3dad2b09-9e66-4eb8-9bef-XXXXXXX"
+    #}
+    #update azuredeploy.parameter.json by text editor
 
-#change folder
-cd ../spawner-functions
+    #deploy resource group
+    az group deployment create --template-file azuredeploy.json --parameters @azuredeploy.parameters.json
 
-#download npm package
-npm install
+    #change folder
+    cd ../spawner-functions
 
-#zip spawner-functions folder
+    #download npm package
+    npm install
 
-#upload zipped file
-az functionapp deployment source config-zip  -g <resource group name> -n <app_name> --src <zip_file>
+    #zip spawner-functions folder by zip tool
+
+    #upload zipped file
+    az functionapp deployment source config-zip  -g <resource group name> -n <app_name> --src <zip_file>
+    ```
 
