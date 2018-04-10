@@ -1,0 +1,13 @@
+{
+  "bindings": [
+    {
+      "name": "mySbMsg",
+      "type": "serviceBusTrigger",
+      "direction": "in",
+      "queueName": "msazurebatchdelete",
+      "connection": "msazurebatchdev_RootManageSharedAccessKey_SERVICEBUS",
+      "accessRights": "Listen"
+    }
+  ],
+  "disabled": false
+}
